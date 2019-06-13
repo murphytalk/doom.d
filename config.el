@@ -8,6 +8,10 @@
 (if (file-exists-p host-custom-init)
     (load-file host-custom-init))
 
+;;-----------------------------------------
+;;Title format : buffer name @ hostname
+;;------------------------------------------
+(setq frame-title-format (concat "%b@emacs." system-name))
 
 ;;----------------------------------------------------------------------------
 ;; Which functionality to enable (use t or nil for true and false)
@@ -23,8 +27,10 @@
 
 ; https://emacs.stackexchange.com/questions/36745/enable-ivy-fuzzy-matching-everywhere-except-in-swiper
 (setq ivy-re-builders-alist
-      '((swiper . ivy--regex-plus)
-        (t      . ivy--regex-fuzzy)))
+      '(
+        (counsel-M-x . ivy--regex-fuzzy)
+        (t . ivy--regex-plus))
+      )
 
 (when (display-graphic-p)
   ;;run M-x all-the-icons-install-fonts to use icons theme
