@@ -13,18 +13,6 @@
 ;;------------------------------------------
 (setq frame-title-format (concat "%b@emacs." system-name))
 
-;;----------------------------------------------------------------------------
-;; Which functionality to enable (use t or nil for true and false)
-;;----------------------------------------------------------------------------
-(setq *is-a-mac* (eq system-type 'darwin))
-(setq *win64* (eq system-type 'windows-nt))
-(setq *cygwin* (eq system-type 'cygwin) )
-(setq *linux* (or (eq system-type 'gnu/linux) (eq system-type 'linux)) )
-(setq *unix* (or *linux* (eq system-type 'usg-unix-v) (eq system-type 'berkeley-unix)) )
-(setq *emacs24* (>= emacs-major-version 24))
-(setq *emacs25* (>= emacs-major-version 25))
-(setq *emacs26* (>= emacs-major-version 26))
-
 ; https://emacs.stackexchange.com/questions/36745/enable-ivy-fuzzy-matching-everywhere-except-in-swiper
 (setq ivy-re-builders-alist
       '(
@@ -34,16 +22,27 @@
 
 (when (display-graphic-p)
   ;;run M-x all-the-icons-install-fonts to use icons theme
-  (setq neo-theme 'icons)
-  (if *win64*
+  ;(setq neo-theme 'icons)
+  (if IS-WINDOWS
       (setq my-font "Consolas-10")
-    (if *is-a-mac*
+    (if IS-MAC
         (setq my-font "SF Mono-12")
       (setq my-font "Fira Code Retina-10")))
   (set-default-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
   (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" . "unicode-bmp")))
+
+;; {{ tramp setup
+(add-to-list 'backup-directory-alist
+             (cons tramp-file-name-regexp nil))
+(setq tramp-chunksize 8192)
+
+;; @see https://github.com/syl20bnr/spacemacs/issues/1921
+;; If you tramp is hanging, you can uncomment below line.
+;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+;; }}
+
 
 ;;===========================================================================
 ;; Keys mapping
@@ -66,7 +65,7 @@
 (global-set-key [(meta g)] 'goto-line)
 
 
-(when *is-a-mac*
+(when IS-MAC
   (global-unset-key [home])
   (global-set-key [home] 'move-beginning-of-line)
   (global-unset-key [end])
