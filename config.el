@@ -38,6 +38,11 @@
              (cons tramp-file-name-regexp nil))
 (setq tramp-chunksize 8192)
 
+;;
+;;; Custom
+
+(load! "lisp/init-ido.el")
+
 ;; @see https://github.com/syl20bnr/spacemacs/issues/1921
 ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")

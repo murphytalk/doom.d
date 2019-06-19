@@ -7,3 +7,4 @@
 ;; (package! builtin-package :disable t)
 (package! xcscope)
 (package! helm-ls-git)
+(package! flx-ido)
