@@ -130,7 +130,7 @@
         +capture         ; org-capture in and outside of Emacs
         +export          ; Exporting org to whatever you want
         +habit           ; Keep track of your habits
-        +present         ; Emacs for presentations
+;        +present         ; Emacs for presentations
         +protocol)       ; Support for org-protocol:// links
        perl              ; write code no one else can comprehend
        ;;php               ; perl's insecure younger brother
