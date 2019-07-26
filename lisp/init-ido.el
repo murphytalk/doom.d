@@ -1,5 +1,5 @@
 ;; Use C-f during file selection to switch to regular find-file
-(require 'flx-ido)
+(require 'flx-ido) ; fuzzy match
 (ido-mode 'file)  ; use 'buffer rather than t to use only buffer switching
 (flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.

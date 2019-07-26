@@ -27,7 +27,7 @@
       (setq my-font "Consolas-10")
     (if IS-MAC
         (setq my-font "SF Mono-12")
-      (setq my-font "Fira Code Retina-10")))
+      (setq my-font "Mono-10")))
   (set-default-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
@@ -45,9 +45,14 @@
 
 ;;
 ;;;Ported from https://github.com/murphytalk/emacs.d
-;;;
+;;;ido-find-file is way faster than ivy's version over tramp
 (load! "lisp/init-ido.el")
 
+
+;;===========================================================================
+;; Code navigation
+;;===========================================================================
+(setq dumb-jump-selector 'ivy)
 
 ;;===========================================================================
 ;; Keys mapping
