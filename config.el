@@ -54,6 +54,37 @@
 ;;===========================================================================
 (setq dumb-jump-selector 'ivy)
 
+;; ag
+;; https://agel.readthedocs.io/en/latest/index.html
+
+
+
+;;spell check
+(after! ispell
+(setq ispell-program-name (executable-find "hunspell"))
+(setq ispell-dictionary-alist
+  '((nil "[A-Za-z]" "[^A-Za-z]" "[']" t
+     ("-d" "en_US" "-i" "utf-8") nil utf-8)
+    ("US"
+     "[A-Za-z]" "[^A-Za-z]" "[']" nil
+     ("-d" "en_US") nil utf-8)
+    ("UK"
+     "[A-Za-z]" "[^A-Za-z]" "[']" nil
+     ("-d" "en_GB") nil utf-8)
+    ))
+(ispell-change-dictionary "US" t)
+)
+(when IS-MAC
+  ;; flyspell uses middel mouse button to show candidates by default
+  ;; replace it with right mouse on mac
+  ;; TODO: use use-package to replace evla-after-load
+  (eval-after-load "flyspell"
+    '(progn
+       (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+       (define-key flyspell-mouse-map [mouse-3] #'undefined)))
+  )
+
+
 ;;===========================================================================
 ;; Keys mapping
 ;;===========================================================================
