@@ -2,27 +2,18 @@
 
 ;; Place your private configuration here
 
-;; machine specific extra config
-;; org-idx could be set here
-(setq host-custom-init (concat "~/" system-name ".el"))
-(if (file-exists-p host-custom-init)
-    (load-file host-custom-init))
-
 ;;-----------------------------------------
 ;;Title format : buffer name @ hostname
 ;;------------------------------------------
 (setq frame-title-format (concat "%b@emacs." system-name))
 
 ; https://emacs.stackexchange.com/questions/36745/enable-ivy-fuzzy-matching-everywhere-except-in-swiper
-(setq ivy-re-builders-alist
-      '(
-        (counsel-M-x . ivy--regex-fuzzy)
-        (t . ivy--regex-plus))
-      )
+(setq ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy)
+                              (t . ivy--regex-plus)))
 
 (when (display-graphic-p)
   ;;run M-x all-the-icons-install-fonts to use icons theme
-  ;(setq neo-theme 'icons)
+  ;;(setq neo-theme 'icons)
   (if IS-WINDOWS
       (setq my-font "Consolas-10")
     (if IS-MAC
@@ -31,12 +22,11 @@
   (set-default-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
-  (if IS-WINDOWS
-      (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" . "unicode-bmp"))))
+  (if IS-WINDOWS (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" .
+                                                                "unicode-bmp"))))
 
 ;; {{ tramp setup
-(add-to-list 'backup-directory-alist
-             (cons tramp-file-name-regexp nil))
+(add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
 (setq tramp-chunksize 8192)
 ;; @see https://github.com/syl20bnr/spacemacs/issues/1921
 ;; If you tramp is hanging, you can uncomment below line.
@@ -59,30 +49,21 @@
 
 
 
-;;spell check
+;;;spell check
 (after! ispell
-(setq ispell-program-name (executable-find "hunspell"))
-(setq ispell-dictionary-alist
-  '((nil "[A-Za-z]" "[^A-Za-z]" "[']" t
-     ("-d" "en_US" "-i" "utf-8") nil utf-8)
-    ("US"
-     "[A-Za-z]" "[^A-Za-z]" "[']" nil
-     ("-d" "en_US") nil utf-8)
-    ("UK"
-     "[A-Za-z]" "[^A-Za-z]" "[']" nil
-     ("-d" "en_GB") nil utf-8)
-    ))
-(ispell-change-dictionary "US" t)
-)
-(when IS-MAC
-  ;; flyspell uses middel mouse button to show candidates by default
-  ;; replace it with right mouse on mac
-  ;; TODO: use use-package to replace evla-after-load
-  (eval-after-load "flyspell"
-    '(progn
-       (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
-       (define-key flyspell-mouse-map [mouse-3] #'undefined)))
-  )
+  (when IS-MAC
+    ;; flyspell uses middle mouse button to show candidates by default
+    ;; replace it with right mouse on mac
+    (eval-after-load "flyspell" '(progn (define-key flyspell-mouse-map [down-mouse-3]
+                                          #'flyspell-correct-word)
+                                        (define-key flyspell-mouse-map [mouse-3] #'undefined)))))
+
+
+;; host specific extra config
+;; org-idx could be set here
+(setq host-custom-init (concat "~/" system-name ".el"))
+(if (file-exists-p host-custom-init)
+    (load-file host-custom-init))
 
 
 ;;===========================================================================
@@ -103,12 +84,11 @@
                      (find-file org-idx))))
 (global-set-key [f4] 'ibuffer)
 (global-set-key [f5] 'neotree-toggle)
-(global-set-key [(meta g)] 'goto-line)
+(global-set-key (kbd "C-S-g") 'goto-line)
 
 
-(when IS-MAC
-  (global-unset-key [home])
-  (global-set-key [home] 'move-beginning-of-line)
-  (global-unset-key [end])
-  (global-set-key [end] 'move-end-of-line)
-  )
+(when IS-MAC (global-unset-key [home])
+      (global-set-key [home] 'move-beginning-of-line)
+      (global-unset-key [end])
+      (global-set-key [end] 'move-end-of-line))
+
