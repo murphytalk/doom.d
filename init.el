@@ -181,14 +181,3 @@
        ;; provides a Spacemacs-inspired keybinding scheme and a smartparens
        ;; config. Use it as a reference for your own modules.
        (default +bindings +smartparens))
-
-;; reconfigure packages
-;; https://github.com/hlissner/doom-emacs/wiki/Customization
-;(def-package-hook! ccls
-;  :pre-config
-;  (lsp-auto-guess-root t)
-;  (lsp-document-sync-method 'incremental) ;; always send incremental document
-;  (lsp-response-timeout 5)
-;  (lsp-prefer-flymake 'flymake)
-;  (lsp-enable-completion-at-point nil)
-;  t)

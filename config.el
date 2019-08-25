@@ -1,6 +1,9 @@
 ;;; ~/.doom.d/config.el -*- lexical-binding: t; -*-
-
 ;; Place your private configuration here
+
+;; reconfigure packages
+;; https://github.com/hlissner/doom-emacs/wiki/Customization
+(load! "+org")
 
 ;;-----------------------------------------
 ;;Title format : buffer name @ hostname
