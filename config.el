@@ -1,6 +1,8 @@
 ;;; ~/.doom.d/config.el -*- lexical-binding: t; -*-
 ;; Place your private configuration here
 
+(put 'narrow-to-region 'disabled nil)
+
 ;; reconfigure packages
 ;; https://github.com/hlissner/doom-emacs/wiki/Customization
 (load! "+org")
