@@ -8,6 +8,15 @@
 ;; More information about these modules (and what flags they support) can be
 ;; found in modules/README.org.
 
+(defun adjust-python-minor-modes ()
+  "use anaconda for local file and elpy for remote file"
+  (if (string-match-p "\/[^\/]*ssh:" buffer-file-name)
+      (progn (anaconda-mode -1)
+             (anaconda-eldoc-mode -1)
+             (elpy-enable)
+             (message "remote python file"))
+    (message "local python file")))
+
 (doom! :input
        ;;chinese
        ;;japanese
@@ -180,4 +189,9 @@
        ;; The default module sets reasonable defaults for Emacs. It also
        ;; provides a Spacemacs-inspired keybinding scheme and a smartparens
        ;; config. Use it as a reference for your own modules.
-       (default +bindings +smartparens))
+       (default +bindings +smartparens)
+
+       :private
+       my-python)
+
+(add-hook 'python-mode-local-vars-hook #'adjust-python-minor-modes)
