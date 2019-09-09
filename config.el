@@ -3,8 +3,28 @@
 
 (put 'narrow-to-region 'disabled nil)
 
+;;===========================================================================
 ;; reconfigure packages
 ;; https://github.com/hlissner/doom-emacs/wiki/Customization
+;;===========================================================================
+(setq dumb-jump-selector 'ivy)
+
+;; ag
+;; https://agel.readthedocs.io/en/latest/index.html
+
+;; ui
+(after! deft
+  (setq deft-recursive t))
+
+;; tools
+(after! ispell
+  (when IS-MAC
+    ;; flyspell uses middle mouse button to show candidates by default
+    ;; replace it with right mouse on mac
+    (eval-after-load "flyspell" '(progn (define-key flyspell-mouse-map [down-mouse-3]
+                                          #'flyspell-correct-word)
+                                        (define-key flyspell-mouse-map [mouse-3] #'undefined)))))
+;; lang
 (load! "+org")
 
 ;;-----------------------------------------
@@ -43,27 +63,6 @@
 ;;;ido-find-file is way faster than ivy's version over tramp
 (load! "lisp/init-ido.el")
 
-
-;;===========================================================================
-;; Code navigation
-;;===========================================================================
-(setq dumb-jump-selector 'ivy)
-
-;; ag
-;; https://agel.readthedocs.io/en/latest/index.html
-
-
-
-;;;spell check
-(after! ispell
-  (when IS-MAC
-    ;; flyspell uses middle mouse button to show candidates by default
-    ;; replace it with right mouse on mac
-    (eval-after-load "flyspell" '(progn (define-key flyspell-mouse-map [down-mouse-3]
-                                          #'flyspell-correct-word)
-                                        (define-key flyspell-mouse-map [mouse-3] #'undefined)))))
-
-
 ;; host specific extra config
 ;; org-idx could be set here
 (setq host-custom-init (concat "~/" system-name ".el"))
@@ -82,11 +81,8 @@
 (global-set-key (kbd "M-p") 'helm-ls-git-ls)
 
 (global-set-key [(control -)] 'set-mark-command)
-(when (not (equal nil org-idx))
-  (global-set-key [f2]
-                  '(lambda()
-                     (interactive)
-                     (find-file org-idx))))
+
+(global-set-key [f2] 'deft)
 (global-set-key [f4] 'ibuffer)
 (global-set-key [f5] 'neotree-toggle)
 (global-set-key (kbd "C-S-g") 'goto-line)
