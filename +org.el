@@ -6,6 +6,7 @@
 
 (after! org
   (setq org-log-into-drawer t)
+  (setq org-archive-location "archive.org::* From %s")
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (setq org-todo-keywords
    '((sequence "TODO(t)" "STARTED(s!)" "|" "DONE(d!)")
