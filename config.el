@@ -14,7 +14,9 @@
 
 ;; ui
 (after! deft
-  (setq deft-recursive t))
+  (setq deft-recursive t)
+  ;;don't auto save my notes
+  (setq deft-auto-save-interval 0))
 
 ;; tools
 (after! ispell
