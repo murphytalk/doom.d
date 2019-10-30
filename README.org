@@ -1,4 +1,4 @@
-#+TITLE:   My emacs doom configure
+#+TITLE:   My Emacs doom configure
 #+DATE:    October 27, 2019
 #+STARTUP: overview
 
