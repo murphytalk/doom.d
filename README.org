@@ -1,0 +1,487 @@
+#+TITLE:   My emacs doom configure
+#+DATE:    October 27, 2019
+#+STARTUP: overview
+
+* Table of Contents :TOC_3:noexport:
+- [[#generate-configuration-files-from-this-readme][Generate configuration files from this README]]
+- [[#additional-packages][Additional packages]]
+- [[#bootstrap][Bootstrap]]
+- [[#private-modules][Private modules]]
+  - [[#python][Python]]
+    - [[#additional-python-packages][Additional python packages]]
+    - [[#my-python-configuration][My python configuration]]
+  - [[#org-mode][Org-mode]]
+- [[#additional-custom-configuration][Additional custom configuration]]
+  - [[#reconfigure-doom-packages][Reconfigure doom packages]]
+    - [[#completion][:completion]]
+    - [[#ui][:ui]]
+    - [[#tools][:tools]]
+  - [[#font-and-ui][Font and UI]]
+  - [[#key-bindings][Key bindings]]
+  - [[#others][Others]]
+    - [[#override-find-file][Override find-file]]
+    - [[#tramp][Tramp]]
+    - [[#hostmachine-specific-extra-config][Host/machine specific extra config]]
+    - [[#override-emacs-defaults][Override Emacs defaults]]
+
+* Generate configuration files from this README
+
+Open this file in org-mode and  run ~C-c C-v t~
+
+[[https://www.youtube.com/watch?v=GK3fij-D1G8][Literate programming with Org-mode]]
+
+* Additional packages
+
+Examples of package configuration.
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+;;; ~/.doom.d/packages.el
+
+;;; Examples:
+;; (package! some-package)
+;; (package! another-package :recipe (:fetcher github :repo "username/repo"))
+;; (package! builtin-package :disable t)
+#+END_SRC
+
+Next, we need language modes that are missing from doom default setup.
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+;; -*- no-byte-compile: t; -*-
+(package! elisp-format)
+#+END_SRC
+
+I still prefer ~ido~ for file selection, doom uses ~ivy~, but I found that ~ido~ is faster than ivy when browing remote files via TRAMP.
+
+#+BEGIN_SRC  emacs-lisp :tangle packages.el
+(package! flx-ido)
+#+END_SRC
+
+Quickly list all files in a git repository.
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! helm-ls-git)
+#+END_SRC
+
+Some additional stuff for code browsing
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! xcscope)
+#+END_SRC
+
+See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88%E3%82%8A%E3%83%A2%E3%83%80%E3%83%B3%E3%81%AA%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B----lsp-mode][this]] for ~lsp-ui~ setup example.
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! lsp-ui)
+#+END_SRC
+
+* Bootstrap
+
+Doom modules to use and private modudles are defined here. Check the same file
+in emacs doom for new stuff.
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+(doom! :input
+       ;;chinese
+       ;;japanese
+
+       :completion
+       company           ; the ultimate code completion backend
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ivy               ; a search engine for love and life
+
+       :ui
+       deft              ; notational velocity for Emacs
+       doom              ; what makes DOOM look the way it does
+       ;doom-dashboard    ; a nifty splash screen for Emacs
+       ;doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;fill-column       ; a `fill-column' indicator
+       hl-todo           ; highlight TODO/FIXME/NOTE tags
+       ;;indent-guides     ; highlighted indent columns
+       modeline          ; snazzy, Atom-inspired modeline, plus API
+       nav-flash         ; blink the current line after jumping
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup            ; tame sudden yet inevitable temporary windows
+        +all             ; catch all popups that start with an asterix
+        +defaults)       ; default popup rules
+       ;;pretty-code       ; replace bits of code with pretty symbols
+       ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
+       treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       window-select     ; visually switch windows
+       workspaces        ; tab emulation, persistence & separate workspaces
+
+       :editor
+       ;(evil +everywhere); come to the dark side, we have cookies
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nigh) universal code folding
+       ;;(format +onsave)  ; automated prettiness
+       ;;lispy             ; vim for lisp, for people who dont like vim
+       multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+
+       :emacs
+       (dired            ; making dired pretty [functional]
+       ;;+ranger         ; bringing the goodness of ranger to dired
+       +icons          ; colorful icons for dired-mode
+        )
+       electric          ; smarter, keyword-based electric-indent
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       ;;eshell            ; a consistent, cross-platform shell (WIP)
+       ;;term              ; terminals in Emacs
+       ;;vterm             ; another terminals in Emacs
+
+       :tools
+       ;;ansible
+       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       docker
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with emacs
+       eval              ; run code, run (also, repls)
+       flycheck          ; tasing you for every semicolon you forget
+       flyspell          ; tasing you for misspelling mispelling
+       ;;gist              ; interacting with github gists
+       (lookup           ; helps you navigate your code and documentation
+        +docsets)        ; ...or in Dash docsets locally
+       ;;lsp
+       ;;macos             ; MacOS-specific commands
+       magit             ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
+       ;;pass              ; password manager for nerds
+       ;;pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       ;;upload            ; map local to remote projects via ssh/ftp
+       ;;wakatime
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;assembly          ; assembly for fun or debugging
+       (cc
+        +lsp)                                ; C/C++/Obj-C madness
+       ;;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       data              ; config/data formats
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;ess               ; emacs speaks statistics
+       ;;fsharp           ; ML stands for Microsoft's Language
+       ;;go                ; the hipster dialect
+       ;;(haskell +intero) ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ;
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       latex             ; writing papers in Emacs has never been so fun
+       ;;ledger            ; an accounting system in Emacs
+       lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       (org              ; organize your plain life in plain text
+        +attach          ; custom attachment system
+        +babel           ; running code in org
+        +capture         ; org-capture in and outside of Emacs
+        +export          ; Exporting org to whatever you want
+        +habit           ; Keep track of your habits
+;        +present         ; Emacs for presentations
+        +protocol)       ; Support for org-protocol:// links
+       perl              ; write code no one else can comprehend
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       python            ; beautiful is better than ugly
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;rest              ; Emacs as a REST client
+       ;;ruby              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       web               ; the tubes
+       ;;vala              ; GObjective-C
+
+       :email
+       ;;(mu4e +gmail)       ; WIP
+       ;;notmuch             ; WIP
+       ;;(wanderlust +gmail) ; WIP
+
+       ;; Applications are complex and opinionated modules that transform Emacs
+       ;; toward a specific purpose. They may have additional dependencies and
+       ;; should be loaded late.
+       :app
+       ;;calendar
+       ;;irc              ; how neckbeards socialize
+       ;;(rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+       ;;(write            ; emacs as a word processor (latex + org + markdown)
+       ;; +wordnut         ; wordnet (wn) search
+       ;; +langtool)       ; a proofreader (grammar/style check) for Emacs
+
+       :collab
+       ;;floobits          ; peer programming for a price
+       ;;impatient-mode    ; show off code over HTTP
+
+       :config
+       ;; For literate config users. This will tangle+compile a config.org
+       ;; literate config in your `doom-private-dir' whenever it changes.
+       ;;literate
+
+       ;; The default module sets reasonable defaults for Emacs. It also
+       ;; provides a Spacemacs-inspired keybinding scheme and a smartparens
+       ;; config. Use it as a reference for your own modules.
+       (default +bindings +smartparens)
+
+       :private
+       my-python
+       my-org
+)
+#+END_SRC
+* Private modules
+** Python
+*** Additional python packages
+
+#+BEGIN_SRC emacs-lisp :mkdirp yes :tangle modules/private/my-python/packages.el
+(package! elpy)
+#+END_SRC
+
+*** My python configuration
+**** Use eply for remote python files
+
+Doom's python mode installs a hook which  turns on ~anaconda~ mode for python file, which is unusable when open a remote file over ssh, as it would constantly request to access the remote file.
+
+We append our hook to turn off ~anaconda~ mode and enable ~elpy~ for remote
+python files. Note the order of hooks is important, we want our hook be the last
+one so we can override what the other hooks do.
+
+#+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
+(after! python
+  (add-hook! 'python-mode-local-vars-hook
+             :append
+             (defun adjust-python-minor-modes ()
+               "use anaconda for local file and elpy for remote file"
+               (if (string-match-p "\/[^\/]*ssh:" buffer-file-name)
+                   (progn (anaconda-mode -1)
+                          (anaconda-eldoc-mode -1)
+                          (elpy-enable)
+                          (message "remote python file"))
+                 (message "local python file")))))
+#+END_SRC
+
+**** Configure elpy
+
+#+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
+(setq python3 (executable-find "python3"))
+(when (not (equal nil python3))
+  (setq elpy-rpc-python-command python3)
+  (setq elpy-interactive-python-command python3)
+  )
+(setq python-shell-interpreter "ipython3"
+      python-shell-interpreter-args "-i --simple-prompt")
+#+END_SRC
+**** Python scripts that do not have .py extention name
+
+#+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
+(add-to-list 'auto-mode-alist '("\\SConscript$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\SConstruct$" . python-mode))
+#+END_SRC
+** Org-mode
+
+Shows child tree item's progress.
+
+#+BEGIN_SRC  emacs-lisp :mkdirp yes :tangle emacs-lisp :tangle modules/private/my-org/config.el
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+#+END_SRC
+
+Override doom default configurations.
+
+#+BEGIN_SRC  emacs-lisp :tangle modules/private/my-org/config.el
+(after! org
+  (setq org-log-into-drawer t)
+  (setq org-archive-location "archive.org::* From %s")
+  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+  (setq org-todo-keywords
+   '((sequence "TODO(t)" "STARTED(s!)" "|" "DONE(d!)")
+     (sequence "[ ](T)" "[-](P)" "[?](M)" "|" "[X](D!)")
+     (sequence "NEXT(n)" "WAIT(w@/!)" "HOLD(h@/!)" "|" "ABRT(c!)"))))
+#+END_SRC
+
+* Additional custom configuration
+** Reconfigure doom packages
+*** :completion
+
+[[https://emacs.stackexchange.com/questions/36745/enable-ivy-fuzzy-matching-everywhere-except-in-swiper][Only use]] ivy fuzzy matching when looking for emacs functions.
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(setq ivy-re-builders-alist '((counsel-M-x . ivy--regex-fuzzy)
+                              (t . ivy--regex-plus)))
+
+#+END_SRC
+
+Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dumb-jump][dump jump]] .
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(setq dumb-jump-selector 'ivy)
+#+END_SRC
+*** :ui
+
+#+BEGIN_SRC  emacs-lisp :tangle config.el
+(after! deft
+  (setq deft-recursive t)
+  ;;don't auto save my notes
+  (setq deft-auto-save-interval 0))
+#+END_SRC
+
+*** :tools
+
+[[https://www.emacswiki.org/emacs/FlySpell][Fly Spell]] uses middle mouse button to show candidates by default, replace it with right mouse on Mac.
+
+#+BEGIN_SRC  emacs-lisp :tangle config.el
+(after! ispell
+  (when IS-MAC
+    ;; flyspell uses middle mouse button to show candidates by default
+    ;; replace it with right mouse on mac
+    (eval-after-load "flyspell" '(progn (define-key flyspell-mouse-map [down-mouse-3]
+                                          #'flyspell-correct-word)
+                                        (define-key flyspell-mouse-map [mouse-3] #'undefined)))))
+#+END_SRC
+** Font and UI
+
+Title format : buffer name @ hostname
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(setq frame-title-format (concat "%b@emacs." system-name))
+#+END_SRC
+
+OS dependent font configuration
+#+BEGIN_SRC  emacs-lisp :tangle config.el
+(when (display-graphic-p)
+  ;;run M-x all-the-icons-install-fonts to use icons theme
+  ;;(setq neo-theme 'icons)
+  (if IS-WINDOWS
+      (setq my-font "Consolas-10")
+    (if IS-MAC
+        (setq my-font "SF Mono-12")
+      (setq my-font "Mono-10")))
+  (set-default-font my-font)
+  (set-face-attribute 'default t
+                      :font my-font)
+  (if IS-WINDOWS (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" .
+                                                                "unicode-bmp"))))
+#+END_SRC
+
+** Key bindings
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(global-set-key (kbd "C-x g") 'magit-status)
+
+;; https://github.com/emacs-helm/helm-ls-git
+(global-set-key (kbd "M-p") 'helm-ls-git-ls)
+
+(global-set-key [(control -)] 'set-mark-command)
+
+(global-set-key [f2] 'deft)
+(global-set-key [f4] 'ibuffer)
+(global-set-key [f5] 'neotree-toggle)
+(global-set-key (kbd "C-S-g") 'goto-line)
+
+(when IS-MAC (global-unset-key [home])
+      (global-set-key [home] 'move-beginning-of-line)
+      (global-unset-key [end])
+      (global-set-key [end] 'move-end-of-line))
+
+#+END_SRC
+
+** Others
+*** Override find-file
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(require 'flx-ido) ; fuzzy match
+(ido-mode 'file)  ; use 'buffer rather than t to use only buffer switching
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-enable-flex-matching t)
+(setq ido-use-faces nil)
+(setq ido-use-filename-at-point nil)
+(setq ido-auto-merge-work-directories-length 0)
+(setq ido-use-virtual-buffers t)
+;; @see https://github.com/lewang/flx
+(setq flx-ido-threshold 10000)
+;; Allow the same buffer to be open in different frames
+(setq ido-default-buffer-method 'selected-window)
+
+;; disable ido for certain commands,
+;; @see http://stackoverflow.com/questions/6771664/disable-ido-mode-for-specific-commands
+(defadvice ido-read-buffer (around ido-read-buffer-possibly-ignore activate)
+  "Check to see if use wanted to avoid using ido"
+  (if (eq (get this-command 'ido) 'ignore)
+      (let ((read-buffer-function nil))
+        (run-hook-with-args 'ido-before-fallback-functions 'read-buffer)
+        (setq ad-return-value (apply 'read-buffer (ad-get-args 0))))
+    ad-do-it))
+(put 'shell 'ido 'ignore)
+(put 'ffap-alternate-file 'ido 'ignore)
+(put 'tmm-menubar 'ido 'ignore)
+(put 'dired-do-copy 'ido 'ignore)
+(put 'dired-do-rename 'ido 'ignore)
+(put 'vc-copy-file-and-rename-buffer 'ido 'ignore)
+(put 'dired-create-directory 'ido 'ignore)
+(put 'copy-file-and-rename-buffer 'ido 'ignore)
+(put 'rename-file-and-buffer 'ido 'ignore)
+(put 'w3m-goto-url 'ido 'ignore)
+(put 'ido-find-file 'ido 'ignore)
+(put 'ido-edit-input 'ido 'ignore)
+(put 'read-file-name 'ido 'ignore)
+(put 'dired-create-directory 'ido 'ignore)
+(put 'minibuffer-completion-help 'ido 'ignore)
+(put 'minibuffer-complete 'ido 'ignore)
+(put 'c-set-offset 'ido 'ignore)
+(put 'rgrep 'ido 'ignore)
+(put 'dired-create-directory 'ido 'ignore)
+#+END_SRC
+*** Tramp
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
+(setq tramp-chunksize 8192)
+;; @see https://github.com/syl20bnr/spacemacs/issues/1921
+;; If you tramp is hanging, you can uncomment below line.
+;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+#+END_SRC
+*** Host/machine specific extra config
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(setq host-custom-init (concat "~/" system-name ".el"))
+(if (file-exists-p host-custom-init)
+    (load-file host-custom-init))
+#+END_SRC
+
+*** Override Emacs defaults
+
+#+BEGIN_SRC :tangle config.el
+(put 'narrow-to-region 'disabled nil)
+#+END_SRC
