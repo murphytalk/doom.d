@@ -5,6 +5,10 @@
 * Table of Contents :TOC_3:noexport:
 - [[#generate-configuration-files-from-this-readme][Generate configuration files from this README]]
 - [[#additional-packages][Additional packages]]
+  - [[#additional-language-modes][Additional language modes]]
+  - [[#fuzzy-file-matching][Fuzzy file matching]]
+  - [[#git][git]]
+  - [[#code-navigation][Code navigation]]
 - [[#bootstrap][Bootstrap]]
 - [[#private-modules][Private modules]]
   - [[#python][Python]]
@@ -31,39 +35,24 @@ Open this file in org-mode and  run ~C-c C-v t~
 [[https://www.youtube.com/watch?v=GK3fij-D1G8][Literate programming with Org-mode]]
 
 * Additional packages
+** Additional language modes
+** Fuzzy file matching
 
-Examples of package configuration.
-
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-;;; ~/.doom.d/packages.el
-
-;;; Examples:
-;; (package! some-package)
-;; (package! another-package :recipe (:fetcher github :repo "username/repo"))
-;; (package! builtin-package :disable t)
-#+END_SRC
-
-Next, we need language modes that are missing from doom default setup.
-
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-;; -*- no-byte-compile: t; -*-
-(package! elisp-format)
-#+END_SRC
-
-I still prefer ~ido~ for file selection, doom uses ~ivy~, but I found that ~ido~ is faster than ivy when browing remote files via TRAMP.
+I still prefer [[https://www.emacswiki.org/emacs/InteractivelyDoThings][ido]] for file fuzzy matching, doom uses [[https://github.com/abo-abo/swiper][ivy]], but I found that with [[https://github.com/lewang/flx][flx]], ido is way faster over TRAMP.
 
 #+BEGIN_SRC  emacs-lisp :tangle packages.el
 (package! flx-ido)
 #+END_SRC
 
-Quickly list all files in a git repository.
+** git
+
+List and filter filers in git repository.
 
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! helm-ls-git)
 #+END_SRC
 
-Some additional stuff for code browsing
-
+** Code navigation
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! xcscope)
 #+END_SRC
@@ -73,7 +62,6 @@ See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! lsp-ui)
 #+END_SRC
-
 * Bootstrap
 
 Doom modules to use and private modudles are defined here. Check the same file
