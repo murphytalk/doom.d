@@ -3,40 +3,35 @@
 #+STARTUP: overview
 
 * Table of Contents :TOC_3:noexport:
-- [[#generate-configuration-files-from-this-readme][Generate configuration files from this README]]
-- [[#additional-packages][Additional packages]]
-  - [[#additional-language-modes][Additional language modes]]
-  - [[#fuzzy-file-matching][Fuzzy file matching]]
-  - [[#git][git]]
-  - [[#code-navigation][Code navigation]]
-- [[#bootstrap][Bootstrap]]
-- [[#private-modules][Private modules]]
-  - [[#python][Python]]
-    - [[#additional-python-packages][Additional python packages]]
-    - [[#my-python-configuration][My python configuration]]
-  - [[#org-mode][Org-mode]]
-- [[#additional-custom-configuration][Additional custom configuration]]
-  - [[#reconfigure-doom-packages][Reconfigure doom packages]]
-    - [[#completion][:completion]]
-    - [[#ui][:ui]]
-    - [[#tools][:tools]]
-  - [[#font-and-ui][Font and UI]]
-  - [[#key-bindings][Key bindings]]
-  - [[#others][Others]]
-    - [[#override-find-file][Override find-file]]
-    - [[#tramp][Tramp]]
-    - [[#hostmachine-specific-extra-config][Host/machine specific extra config]]
-    - [[#override-emacs-defaults][Override Emacs defaults]]
+- [[#configuration][Configuration]]
+  - [[#generate-configuration-files-from-this-readme][Generate configuration files from this README]]
+  - [[#additional-packages][Additional packages]]
+    - [[#additional-language-modes][Additional language modes]]
+    - [[#fuzzy-file-matching][Fuzzy file matching]]
+    - [[#git][git]]
+    - [[#code-navigation][Code navigation]]
+  - [[#bootstrap][Bootstrap]]
+  - [[#private-modules][Private modules]]
+    - [[#python][Python]]
+    - [[#org-mode][Org-mode]]
+  - [[#additional-custom-configuration][Additional custom configuration]]
+    - [[#reconfigure-doom-packages][Reconfigure doom packages]]
+    - [[#font-and-ui][Font and UI]]
+    - [[#key-bindings][Key bindings]]
+    - [[#others][Others]]
+- [[#troubleshooting][Troubleshooting]]
+  - [[#doom-update-fails][doom update fails]]
 
-* Generate configuration files from this README
+* Configuration
+** Generate configuration files from this README
 
 Open this file in org-mode and  run ~C-c C-v t~
 
 [[https://www.youtube.com/watch?v=GK3fij-D1G8][Literate programming with Org-mode]]
 
-* Additional packages
-** Additional language modes
-** Fuzzy file matching
+** Additional packages
+*** Additional language modes
+*** Fuzzy file matching
 
 I still prefer [[https://www.emacswiki.org/emacs/InteractivelyDoThings][ido]] for file fuzzy matching, doom uses [[https://github.com/abo-abo/swiper][ivy]], but I found that with [[https://github.com/lewang/flx][flx]], ido is way faster over TRAMP.
 
@@ -44,7 +39,7 @@ I still prefer [[https://www.emacswiki.org/emacs/InteractivelyDoThings][ido]] fo
 (package! flx-ido)
 #+END_SRC
 
-** git
+*** git
 
 List and filter filers in git repository.
 
@@ -52,7 +47,7 @@ List and filter filers in git repository.
 (package! helm-ls-git)
 #+END_SRC
 
-** Code navigation
+*** Code navigation
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! xcscope)
 #+END_SRC
@@ -62,7 +57,7 @@ See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! lsp-ui)
 #+END_SRC
-* Bootstrap
+** Bootstrap
 
 Doom modules to use and private modudles are defined here. Check the same file
 in emacs doom for new stuff.
@@ -247,16 +242,16 @@ in emacs doom for new stuff.
        my-org
 )
 #+END_SRC
-* Private modules
-** Python
-*** Additional python packages
+** Private modules
+*** Python
+**** Additional python packages
 
 #+BEGIN_SRC emacs-lisp :mkdirp yes :tangle modules/private/my-python/packages.el
 (package! elpy)
 #+END_SRC
 
-*** My python configuration
-**** Use eply for remote python files
+**** My python configuration
+***** Use eply for remote python files
 
 Doom's python mode installs a hook which  turns on ~anaconda~ mode for python file, which is unusable when open a remote file over ssh, as it would constantly request to access the remote file.
 
@@ -278,7 +273,7 @@ one so we can override what the other hooks do.
                  (message "local python file")))))
 #+END_SRC
 
-**** Configure elpy
+***** Configure elpy
 
 #+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
 (setq python3 (executable-find "python3"))
@@ -289,13 +284,13 @@ one so we can override what the other hooks do.
 (setq python-shell-interpreter "ipython3"
       python-shell-interpreter-args "-i --simple-prompt")
 #+END_SRC
-**** Python scripts that do not have .py extention name
+***** Python scripts that do not have .py extention name
 
 #+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
 (add-to-list 'auto-mode-alist '("\\SConscript$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\SConstruct$" . python-mode))
 #+END_SRC
-** Org-mode
+*** Org-mode
 
 Shows child tree item's progress.
 
@@ -319,9 +314,9 @@ Override doom default configurations.
      (sequence "NEXT(n)" "WAIT(w@/!)" "HOLD(h@/!)" "|" "ABRT(c!)"))))
 #+END_SRC
 
-* Additional custom configuration
-** Reconfigure doom packages
-*** :completion
+** Additional custom configuration
+*** Reconfigure doom packages
+**** :completion
 
 [[https://emacs.stackexchange.com/questions/36745/enable-ivy-fuzzy-matching-everywhere-except-in-swiper][Only use]] ivy fuzzy matching when looking for emacs functions.
 
@@ -336,7 +331,7 @@ Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dum
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (setq dumb-jump-selector 'ivy)
 #+END_SRC
-*** :ui
+**** :ui
 
 #+BEGIN_SRC  emacs-lisp :tangle config.el
 (after! deft
@@ -345,7 +340,7 @@ Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dum
   (setq deft-auto-save-interval 0))
 #+END_SRC
 
-*** :tools
+**** :tools
 
 [[https://www.emacswiki.org/emacs/FlySpell][Fly Spell]] uses middle mouse button to show candidates by default, replace it with right mouse on Mac.
 
@@ -358,7 +353,7 @@ Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dum
                                           #'flyspell-correct-word)
                                         (define-key flyspell-mouse-map [mouse-3] #'undefined)))))
 #+END_SRC
-** Font and UI
+*** Font and UI
 
 Title format : buffer name @ hostname
 
@@ -383,7 +378,7 @@ OS dependent font configuration
                                                                 "unicode-bmp"))))
 #+END_SRC
 
-** Key bindings
+*** Key bindings
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -405,8 +400,8 @@ OS dependent font configuration
 
 #+END_SRC
 
-** Others
-*** Override find-file
+*** Others
+**** Override find-file
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (require 'flx-ido) ; fuzzy match
 (ido-mode 'file)  ; use 'buffer rather than t to use only buffer switching
@@ -451,7 +446,7 @@ OS dependent font configuration
 (put 'rgrep 'ido 'ignore)
 (put 'dired-create-directory 'ido 'ignore)
 #+END_SRC
-*** Tramp
+**** Tramp
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
@@ -460,7 +455,7 @@ OS dependent font configuration
 ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
-*** Host/machine specific extra config
+**** Host/machine specific extra config
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (setq host-custom-init (concat "~/" system-name ".el"))
@@ -468,8 +463,11 @@ OS dependent font configuration
     (load-file host-custom-init))
 #+END_SRC
 
-*** Override Emacs defaults
+**** Override Emacs defaults
 
 #+BEGIN_SRC :tangle config.el
 (put 'narrow-to-region 'disabled nil)
 #+END_SRC
+
+* Troubleshooting
+** [[https://github.com/hlissner/doom-emacs/issues/1721][doom update fails]]
