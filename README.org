@@ -31,6 +31,10 @@ Open this file in org-mode and  run ~C-c C-v t~
 
 ** Additional packages
 *** Additional language modes
+#+BEGIN_SRC  emacs-lisp :tangle packages.el
+(package! kotlin-mode)
+(package! jinja2-mode)
+#+END_SRC
 *** Fuzzy file matching
 
 I still prefer [[https://www.emacswiki.org/emacs/InteractivelyDoThings][ido]] for file fuzzy matching, doom uses [[https://github.com/abo-abo/swiper][ivy]], but I found that with [[https://github.com/lewang/flx][flx]], ido is way faster over TRAMP.
