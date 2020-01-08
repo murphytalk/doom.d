@@ -15,10 +15,11 @@
     - [[#python][Python]]
     - [[#org-mode][Org-mode]]
   - [[#additional-custom-configuration][Additional custom configuration]]
+    - [[#hostmachine-specific-extra-config][Host/machine specific extra config]]
     - [[#reconfigure-doom-packages][Reconfigure doom packages]]
     - [[#font-and-ui][Font and UI]]
-    - [[#key-bindings][Key bindings]]
     - [[#others][Others]]
+    - [[#key-bindings][Key bindings]]
 - [[#troubleshooting][Troubleshooting]]
   - [[#doom-update-fails][doom update fails]]
 
@@ -34,6 +35,7 @@ Open this file in org-mode and  run ~C-c C-v t~
 #+BEGIN_SRC  emacs-lisp :tangle packages.el
 (package! kotlin-mode)
 (package! jinja2-mode)
+(package! ahk-mode)
 #+END_SRC
 *** Fuzzy file matching
 
@@ -319,6 +321,16 @@ Override doom default configurations.
 #+END_SRC
 
 ** Additional custom configuration
+*** Host/machine specific extra config
+
+Load machine sepcific extra config in the beginning as it might be used other configurations.
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(setq host-custom-init (concat "~/" system-name ".el"))
+(if (file-exists-p host-custom-init)
+    (load-file host-custom-init))
+#+END_SRC
+
 *** Reconfigure doom packages
 **** :completion
 
@@ -345,6 +357,17 @@ Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dum
 #+END_SRC
 
 **** :tools
+On Windows:
+1. Install ~scoop~
+2. ~scoop install msys2~
+3. ~pacman -Syu aspell aspell-en~
+
+#+BEGIN_SRC  emacs-lisp :tangle config.el
+
+(when (boundp 'ispell-program-path)
+  (add-to-list 'exec-path ispell-program-path))
+(setq ispell-program-name "aspell")
+#+END_SRC
 
 [[https://www.emacswiki.org/emacs/FlySpell][Fly Spell]] uses middle mouse button to show candidates by default, replace it with right mouse on Mac.
 
@@ -380,28 +403,6 @@ OS dependent font configuration
                       :font my-font)
   (if IS-WINDOWS (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" .
                                                                 "unicode-bmp"))))
-#+END_SRC
-
-*** Key bindings
-
-#+BEGIN_SRC emacs-lisp :tangle config.el
-(global-set-key (kbd "C-x g") 'magit-status)
-
-;; https://github.com/emacs-helm/helm-ls-git
-(global-set-key (kbd "M-p") 'helm-ls-git-ls)
-
-(global-set-key [(control -)] 'set-mark-command)
-
-(global-set-key [f2] 'deft)
-(global-set-key [f4] 'ibuffer)
-(global-set-key [f5] 'neotree-toggle)
-(global-set-key (kbd "C-S-g") 'goto-line)
-
-(when IS-MAC (global-unset-key [home])
-      (global-set-key [home] 'move-beginning-of-line)
-      (global-unset-key [end])
-      (global-set-key [end] 'move-end-of-line))
-
 #+END_SRC
 
 *** Others
@@ -459,18 +460,32 @@ OS dependent font configuration
 ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
-**** Host/machine specific extra config
-
-#+BEGIN_SRC emacs-lisp :tangle config.el
-(setq host-custom-init (concat "~/" system-name ".el"))
-(if (file-exists-p host-custom-init)
-    (load-file host-custom-init))
-#+END_SRC
-
 **** Override Emacs defaults
 
 #+BEGIN_SRC :tangle config.el
 (put 'narrow-to-region 'disabled nil)
+#+END_SRC
+
+*** Key bindings
+
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(global-set-key (kbd "C-x g") 'magit-status)
+
+;; https://github.com/emacs-helm/helm-ls-git
+(global-set-key (kbd "M-p") 'helm-ls-git-ls)
+
+(global-set-key [(control -)] 'set-mark-command)
+
+(global-set-key [f2] 'deft)
+(global-set-key [f4] 'ibuffer)
+(global-set-key [f5] 'neotree-toggle)
+(global-set-key (kbd "C-S-g") 'goto-line)
+
+(when IS-MAC (global-unset-key [home])
+      (global-set-key [home] 'move-beginning-of-line)
+      (global-unset-key [end])
+      (global-set-key [end] 'move-end-of-line))
+
 #+END_SRC
 
 * Troubleshooting
