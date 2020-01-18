@@ -33,7 +33,6 @@ Open this file in org-mode and  run ~C-c C-v t~
 ** Additional packages
 *** Additional language modes
 #+BEGIN_SRC  emacs-lisp :tangle packages.el
-(package! kotlin-mode)
 (package! jinja2-mode)
 (package! ahk-mode)
 #+END_SRC
@@ -178,7 +177,7 @@ in emacs doom for new stuff.
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
-       ;;kotlin            ; a better, slicker Java(Script)
+       kotlin            ; a better, slicker Java(Script)
        latex             ; writing papers in Emacs has never been so fun
        ;;ledger            ; an accounting system in Emacs
        lua               ; one-based indices? one-based indices
