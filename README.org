@@ -53,12 +53,7 @@ List and filter filers in git repository.
 #+END_SRC
 
 *** Code navigation
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! xcscope)
-#+END_SRC
-
 See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88%E3%82%8A%E3%83%A2%E3%83%80%E3%83%B3%E3%81%AA%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B----lsp-mode][this]] for ~lsp-ui~ setup example.
-
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! lsp-ui)
 #+END_SRC
@@ -162,7 +157,7 @@ in emacs doom for new stuff.
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
-       ;;csharp            ; unity, .NET, and mono shenanigans
+       csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
        ;;erlang            ; an elegant language for a more civilized age
        ;;elixir            ; erlang done right
