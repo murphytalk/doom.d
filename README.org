@@ -20,8 +20,9 @@
     - [[#font-and-ui][Font and UI]]
     - [[#others][Others]]
     - [[#key-bindings][Key bindings]]
-- [[#troubleshooting][Troubleshooting]]
+- [[#others-1][Others]]
   - [[#doom-update-fails][doom update fails]]
+  - [[#create-windows-config-dump][Create Windows config dump]]
 
 * Configuration
 ** Generate configuration files from this README
@@ -122,6 +123,11 @@ in emacs doom for new stuff.
        ;;term              ; terminals in Emacs
        ;;vterm             ; another terminals in Emacs
 
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       ;;spell             ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+
        :tools
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
@@ -130,8 +136,6 @@ in emacs doom for new stuff.
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        eval              ; run code, run (also, repls)
-       flycheck          ; tasing you for every semicolon you forget
-       flyspell          ; tasing you for misspelling mispelling
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
@@ -379,7 +383,7 @@ On Windows:
 Title format : buffer name @ hostname
 
 #+BEGIN_SRC emacs-lisp :tangle config.el
-(setq frame-title-format (concat "%b@emacs." system-name))
+(setq frame-title-format (concat "%b@emacs." (system-name)))
 #+END_SRC
 
 OS dependent font configuration
@@ -391,7 +395,7 @@ OS dependent font configuration
       (setq my-font "Consolas-10")
     (if IS-MAC
         (setq my-font "SF Mono-12")
-      (setq my-font "Mono-10")))
+      (setq my-font "JetBrains Mono-11")))
   (set-default-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
@@ -482,5 +486,9 @@ OS dependent font configuration
 
 #+END_SRC
 
-* Troubleshooting
+* Others
 ** [[https://github.com/hlissner/doom-emacs/issues/1721][doom update fails]]
+** Create Windows config dump
+#+BEGIN_SRC bat
+7z a -xr'!.git' emacs.doom.7z .doom.d .emacs.d
+#+END_SRC
