@@ -36,6 +36,7 @@ Open this file in org-mode and  run ~C-c C-v t~
 #+BEGIN_SRC  emacs-lisp :tangle packages.el
 (package! jinja2-mode)
 (package! ahk-mode)
+(package! powershell)
 #+END_SRC
 *** Fuzzy file matching
 
@@ -450,7 +451,6 @@ OS dependent font configuration
 (put 'dired-create-directory 'ido 'ignore)
 #+END_SRC
 **** Tramp
-
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
 (setq tramp-chunksize 8192)
@@ -459,9 +459,12 @@ OS dependent font configuration
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
 **** Override Emacs defaults
-
-#+BEGIN_SRC :tangle config.el
+#+BEGIN_SRC emacs-lisp :tangle config.el
 (put 'narrow-to-region 'disabled nil)
+#+END_SRC
+**** Start Emacs Server
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(server-start)
 #+END_SRC
 
 *** Key bindings
