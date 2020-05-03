@@ -10,6 +10,7 @@
     - [[#fuzzy-file-matching][Fuzzy file matching]]
     - [[#git][git]]
     - [[#code-navigation][Code navigation]]
+    - [[#note-taking-and-journal][Note-taking and journal]]
   - [[#bootstrap][Bootstrap]]
   - [[#private-modules][Private modules]]
     - [[#python][Python]]
@@ -57,6 +58,10 @@ List and filter filers in git repository.
 See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88%E3%82%8A%E3%83%A2%E3%83%80%E3%83%B3%E3%81%AA%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B----lsp-mode][this]] for ~lsp-ui~ setup example.
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! lsp-ui)
+#+END_SRC
+*** Note-taking and journal
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-journal)
 #+END_SRC
 ** Bootstrap
 
@@ -125,7 +130,7 @@ in emacs doom for new stuff.
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       ;;spell             ; tasing you for misspelling mispelling
+       spell             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -395,7 +400,7 @@ OS dependent font configuration
       (setq my-font "Consolas-10")
     (if IS-MAC
         (setq my-font "SF Mono-12")
-      (setq my-font "JetBrains Mono-11")))
+      (setq my-font "Fira Code Retina")))
   (set-default-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
@@ -457,6 +462,27 @@ OS dependent font configuration
 ;; @see https://github.com/syl20bnr/spacemacs/issues/1921
 ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
+#+END_SRC
+**** Org Journal
+See https://github.com/bastibe/org-journal
+#+BEGIN_SRC emacs-lisp :tangle config.el
+(require 'org-journal)
+(customize-set-variable 'org-journal-dir org-directory)
+(customize-set-variable 'org-journal-file-type 'monthly)
+(customize-set-variable 'org-journal-file-format "%Y%m.org")
+; see date time format https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
+(customize-set-variable 'org-journal-date-format "%F %A")
+
+(defun org-journal-file-header-func (time)
+  "Custom function to create journal header."
+  (concat
+    (pcase org-journal-file-type
+      ('daily "#+TITLE: Daily Journal\n#+STARTUP: showeverything\n#+STARTUP: inlineimages")
+      ('weekly "#+TITLE: Weekly Journal\n#+STARTUP: folded\n#+STARTUP: inlineimages")
+      ('monthly "#+TITLE: Monthly Journal\n#+STARTUP: folded\n#+STARTUP: inlineimages")
+      ('yearly "#+TITLE: Yearly Journal\n#+STARTUP: folded\n#+STARTUP: inlineimages"))))
+
+(setq org-journal-file-header 'org-journal-file-header-func)
 #+END_SRC
 **** Override Emacs defaults
 
