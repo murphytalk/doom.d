@@ -38,6 +38,8 @@ Open this file in org-mode and  run ~C-c C-v t~
 (package! jinja2-mode)
 (package! ahk-mode)
 (package! powershell)
+(package! groovy-mode)
+(package! ng2-mode)
 #+END_SRC
 *** Fuzzy file matching
 
