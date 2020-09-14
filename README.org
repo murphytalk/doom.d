@@ -38,6 +38,8 @@ Open this file in org-mode and  run ~C-c C-v t~
 (package! jinja2-mode)
 (package! ahk-mode)
 (package! powershell)
+(package! nix-mode)
+(package! fish-mode)
 #+END_SRC
 *** Fuzzy file matching
 
@@ -66,7 +68,7 @@ See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88
 #+END_SRC
 ** Bootstrap
 
-Doom modules to use and private modudles are defined here. Check the same file
+Doom modules to use and private module are defined here. Check the same file
 in emacs doom for new stuff.
 
 #+BEGIN_SRC emacs-lisp :tangle init.el
@@ -123,6 +125,7 @@ in emacs doom for new stuff.
         )
        electric          ; smarter, keyword-based electric-indent
        vc                ; version-control and Emacs, sitting in a tree
+       (undo +tree)
 
        :term
        ;;eshell            ; a consistent, cross-platform shell (WIP)
@@ -402,11 +405,12 @@ OS dependent font configuration
     (if IS-MAC
         (setq my-font "SF Mono-12")
       (setq my-font "Fira Code Retina")))
-  (set-default-font my-font)
+  (set-frame-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
   (if IS-WINDOWS (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" .
                                                                 "unicode-bmp"))))
+(setq doom-theme 'doom-dracula)
 #+END_SRC
 
 *** Others
