@@ -40,6 +40,8 @@ Open this file in org-mode and  run ~C-c C-v t~
 (package! powershell)
 (package! nix-mode)
 (package! fish-mode)
+(package! groovy-mode)
+(package! ng2-mode)
 #+END_SRC
 *** Fuzzy file matching
 
@@ -410,7 +412,7 @@ OS dependent font configuration
                       :font my-font)
   (if IS-WINDOWS (set-fontset-font "fontset-default" 'gb18030 '("Microsoft YaHei" .
                                                                 "unicode-bmp"))))
-(setq doom-theme 'doom-dracula)
+;(setq doom-theme 'doom-dracula)
 #+END_SRC
 
 *** Others
