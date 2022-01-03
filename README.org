@@ -10,7 +10,6 @@
     - [[#fuzzy-file-matching][Fuzzy file matching]]
     - [[#git][git]]
     - [[#code-navigation][Code navigation]]
-    - [[#note-taking-and-journal][Note-taking and journal]]
   - [[#bootstrap][Bootstrap]]
   - [[#private-modules][Private modules]]
     - [[#python][Python]]
@@ -64,10 +63,6 @@ See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! lsp-ui)
 #+END_SRC
-*** Note-taking and journal
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! org-journal)
-#+END_SRC
 ** Bootstrap
 
 Doom modules to use and private module are defined here. Check the same file
@@ -109,7 +104,7 @@ in emacs doom for new stuff.
        workspaces        ; tab emulation, persistence & separate workspaces
 
        :editor
-       ;(evil +everywhere); come to the dark side, we have cookies
+       (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
        ;;(format +onsave)  ; automated prettiness
@@ -196,6 +191,7 @@ in emacs doom for new stuff.
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
+        +roam2
         +attach          ; custom attachment system
         +babel           ; running code in org
         +capture         ; org-capture in and outside of Emacs
@@ -329,6 +325,12 @@ Override doom default configurations.
      (sequence "NEXT(n)" "WAIT(w@/!)" "HOLD(h@/!)" "|" "ABRT(c!)"))))
 #+END_SRC
 
+The following is a temp fix, see https://github.com/hlissner/doom-emacs/issues/5706
+
+#+begin_src emacs-lisp :tangle modules/private/my-org/config.el
+(defun native-comp-available-p () nil)
+#+end_src
+
 ** Additional custom configuration
 *** Host/machine specific extra config
 
@@ -356,13 +358,19 @@ Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dum
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (setq dumb-jump-selector 'ivy)
 #+END_SRC
+**** :editor
+Turn off evil mode by default
+#+begin_src  emacs-lisp :tangle config.el
+(evil-mode 0)
+#+end_src
 **** :ui
-
 #+BEGIN_SRC  emacs-lisp :tangle config.el
 (after! deft
   (setq deft-recursive t)
   ;;don't auto save my notes
-  (setq deft-auto-save-interval 0))
+  (setq deft-auto-save-interval 0)
+  (setq deft-use-filename-as-title t)
+  (setq deft-strip-summary-regexp "\\([\n ]\\|^#\\+[[:upper:]_]+:.*$\\|:.*:.*$\\)"))
 #+END_SRC
 
 **** :tools
@@ -406,7 +414,7 @@ OS dependent font configuration
       (setq my-font "Consolas-10")
     (if IS-MAC
         (setq my-font "SF Mono-12")
-      (setq my-font "Fira Code Retina")))
+      (setq my-font "Fira Code Retina-12")))
   (set-frame-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
@@ -469,27 +477,16 @@ OS dependent font configuration
 ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
 #+END_SRC
-**** Org Journal
-See https://github.com/bastibe/org-journal
-#+BEGIN_SRC emacs-lisp :tangle config.el
-(require 'org-journal)
-(customize-set-variable 'org-journal-dir org-directory)
-(customize-set-variable 'org-journal-file-type 'monthly)
-(customize-set-variable 'org-journal-file-format "%Y%m.org")
-; see date time format https://www.gnu.org/software/emacs/manual/html_node/elisp/Time-Parsing.html
-(customize-set-variable 'org-journal-date-format "%F %A")
-
-(defun org-journal-file-header-func (time)
-  "Custom function to create journal header."
-  (concat
-    (pcase org-journal-file-type
-      ('daily "#+TITLE: Daily Journal\n#+STARTUP: showeverything\n#+STARTUP: inlineimages")
-      ('weekly "#+TITLE: Weekly Journal\n#+STARTUP: folded\n#+STARTUP: inlineimages")
-      ('monthly "#+TITLE: Monthly Journal\n#+STARTUP: folded\n#+STARTUP: inlineimages")
-      ('yearly "#+TITLE: Yearly Journal\n#+STARTUP: folded\n#+STARTUP: inlineimages"))))
-
-(setq org-journal-file-header 'org-journal-file-header-func)
-#+END_SRC
+**** Org Roam
+#+begin_src  emacs-lisp :tangle config.el
+(org-roam-db-autosync-mode)
+(setq org-roam-dailies-directory "journals/")
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y_%m_%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
+#+end_src
 **** Override Emacs defaults
 #+BEGIN_SRC emacs-lisp :tangle config.el
 (put 'narrow-to-region 'disabled nil)
