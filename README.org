@@ -1,6 +1,6 @@
 #+TITLE:   My Emacs doom configure
-#+DATE:    October 27, 2019
 #+STARTUP: overview
+#+DATE:    October 27, 2019
 
 * Table of Contents :TOC_3:noexport:
 - [[#configuration][Configuration]]
@@ -9,11 +9,11 @@
     - [[#additional-language-modes][Additional language modes]]
     - [[#fuzzy-file-matching][Fuzzy file matching]]
     - [[#git][git]]
-    - [[#code-navigation][Code navigation]]
+    - [[#org-mode][Org-mode]]
   - [[#bootstrap][Bootstrap]]
   - [[#private-modules][Private modules]]
     - [[#python][Python]]
-    - [[#org-mode][Org-mode]]
+    - [[#org-mode-1][Org-mode]]
   - [[#additional-custom-configuration][Additional custom configuration]]
     - [[#hostmachine-specific-extra-config][Host/machine specific extra config]]
     - [[#reconfigure-doom-packages][Reconfigure doom packages]]
@@ -51,18 +51,18 @@ I still prefer [[https://www.emacswiki.org/emacs/InteractivelyDoThings][ido]] fo
 #+END_SRC
 
 *** git
-
 List and filter filers in git repository.
-
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! helm-ls-git)
 #+END_SRC
 
-*** Code navigation
-See [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#lsp%E3%81%A7%E3%82%88%E3%82%8A%E3%83%A2%E3%83%80%E3%83%B3%E3%81%AA%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B----lsp-mode][this]] for ~lsp-ui~ setup example.
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! lsp-ui)
-#+END_SRC
+*** Org-mode
+#+begin_src emacs-lisp :tangle packages.el
+;(straight-use-package 'use-package)
+;(use-package org-logseq
+;  :straight (org-logseq :fetcher github :repo "llcc/org-logseq" :files ("*"))
+;  :custom (org-logseq-dir "~/Dropbox/org-mode"))
+#+end_src
 ** Bootstrap
 
 Doom modules to use and private module are defined here. Check the same file
@@ -145,7 +145,7 @@ in emacs doom for new stuff.
        ;;gist              ; interacting with github gists
        (lookup           ; helps you navigate your code and documentation
         +docsets)        ; ...or in Dash docsets locally
-       ;;lsp
+       (lsp +eglot)
        ;;macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
@@ -203,7 +203,8 @@ in emacs doom for new stuff.
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       python            ; beautiful is better than ugly
+       (python
+        +lsp)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;rest              ; Emacs as a REST client
@@ -255,46 +256,7 @@ in emacs doom for new stuff.
 #+END_SRC
 ** Private modules
 *** Python
-**** Additional python packages
-
-#+BEGIN_SRC emacs-lisp :mkdirp yes :tangle modules/private/my-python/packages.el
-(package! elpy)
-#+END_SRC
-
 **** My python configuration
-***** Use eply for remote python files
-
-Doom's python mode installs a hook which  turns on ~anaconda~ mode for python file, which is unusable when open a remote file over ssh, as it would constantly request to access the remote file.
-
-We append our hook to turn off ~anaconda~ mode and enable ~elpy~ for remote
-python files. Note the order of hooks is important, we want our hook be the last
-one so we can override what the other hooks do.
-
-#+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
-(after! python
-  (add-hook! 'python-mode-local-vars-hook
-             :append
-             (defun adjust-python-minor-modes ()
-               "use anaconda for local file and elpy for remote file"
-               (if (string-match-p "\/[^\/]*ssh:" buffer-file-name)
-                   (progn (anaconda-mode -1)
-                          (anaconda-eldoc-mode -1)
-                          (elpy-enable)
-                          (message "remote python file"))
-                 (message "local python file")))))
-#+END_SRC
-
-***** Configure elpy
-
-#+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
-(setq python3 (executable-find "python3"))
-(when (not (equal nil python3))
-  (setq elpy-rpc-python-command python3)
-  (setq elpy-interactive-python-command python3)
-  )
-(setq python-shell-interpreter "ipython3"
-      python-shell-interpreter-args "-i --simple-prompt")
-#+END_SRC
 ***** Python scripts that do not have .py extention name
 
 #+BEGIN_SRC emacs-lisp :tangle modules/private/my-python/config.el
@@ -361,7 +323,15 @@ Use [[https://oremacs.com/swiper/][ivy]] with [[https://github.com/jacktasia/dum
 **** :editor
 Turn off evil mode by default
 #+begin_src  emacs-lisp :tangle config.el
-(evil-mode 0)
+(after! evil
+  (evil-mode 0)
+)
+#+end_src
+**** :lang
+#+begin_src  emacs-lisp :tangle config.el
+(after! org
+  (org-roam-buffer-toggle)
+)
 #+end_src
 **** :ui
 #+BEGIN_SRC  emacs-lisp :tangle config.el
