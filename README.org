@@ -191,7 +191,7 @@ in emacs doom for new stuff.
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org              ; organize your plain life in plain text
-        +roam2
+       ; +roam2
         +attach          ; custom attachment system
         +babel           ; running code in org
         +capture         ; org-capture in and outside of Emacs
@@ -330,9 +330,9 @@ Turn off evil mode by default
 #+end_src
 **** :lang
 #+begin_src  emacs-lisp :tangle config.el
-(after! org
-  (org-roam-buffer-toggle)
-)
+;(after! org
+;  (org-roam-buffer-toggle)
+;)
 #+end_src
 **** :ui
 #+BEGIN_SRC  emacs-lisp :tangle config.el
@@ -385,7 +385,7 @@ OS dependent font configuration
       (setq my-font "Consolas-10")
     (if IS-MAC
         (setq my-font "SF Mono-12")
-      (setq my-font "Fira Code Retina-12")))
+      (setq my-font "Droid Sans Mono Slashed for Powerline-10")))
   (set-frame-font my-font)
   (set-face-attribute 'default t
                       :font my-font)
@@ -450,13 +450,14 @@ OS dependent font configuration
 #+END_SRC
 **** Org Roam
 #+begin_src  emacs-lisp :tangle config.el
-(org-roam-db-autosync-mode)
+;(org-roam-db-autosync-mode)
 (setq org-roam-dailies-directory "journals/")
 (setq org-roam-dailies-capture-templates
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y_%m_%d>.org"
                             "#+title: %<%Y-%m-%d>\n"))))
+(setq org-startup-with-inline-images t)
 #+end_src
 **** Override Emacs defaults
 #+BEGIN_SRC emacs-lisp :tangle config.el
